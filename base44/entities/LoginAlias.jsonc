@@ -1,0 +1,45 @@
+{
+  "name": "LoginAlias",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string"
+    },
+    "username": {
+      "type": "string",
+      "description": "Lowercase handle used as the login identifier"
+    },
+    "email": {
+      "type": "string",
+      "description": "Account email that the handle resolves to at sign-in"
+    }
+  },
+  "required": [
+    "user_id",
+    "username",
+    "email"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "create": {
+      "created_by_id": "{{user.id}}"
+    },
+    "update": {
+      "created_by_id": "{{user.id}}"
+    },
+    "delete": {
+      "created_by_id": "{{user.id}}"
+    }
+  }
+}

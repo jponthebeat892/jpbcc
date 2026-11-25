@@ -1,0 +1,60 @@
+{
+  "name": "Profile",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string",
+      "description": "The auth user this profile belongs to"
+    },
+    "username": {
+      "type": "string",
+      "description": "Lowercase operator handle used to log in and to be found in the directory"
+    },
+    "display_name": {
+      "type": "string"
+    },
+    "bio": {
+      "type": "string"
+    },
+    "avatar_uri": {
+      "type": "string",
+      "description": "Private file uri of the operator's avatar image"
+    },
+    "background_uri": {
+      "type": "string",
+      "description": "Private file uri of the operator's custom terminal background"
+    },
+    "joined_date": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "user_id",
+    "username"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "user"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "create": {
+      "created_by_id": "{{user.id}}"
+    },
+    "update": {
+      "created_by_id": "{{user.id}}"
+    },
+    "delete": {
+      "created_by_id": "{{user.id}}"
+    }
+  }
+}

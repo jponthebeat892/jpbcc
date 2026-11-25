@@ -1,0 +1,122 @@
+{
+  "name": "Message",
+  "type": "object",
+  "properties": {
+    "conversation_id": {
+      "type": "string"
+    },
+    "participants": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "The two authorized operators who may read this block"
+    },
+    "sender_id": {
+      "type": "string"
+    },
+    "sender_handle": {
+      "type": "string"
+    },
+    "kind": {
+      "type": "string",
+      "enum": [
+        "text",
+        "image",
+        "video",
+        "audio",
+        "document"
+      ]
+    },
+    "cipher": {
+      "type": "string",
+      "description": "AES-256-GCM ciphertext of the block body, base64. Every block has one, including attachments."
+    },
+    "iv": {
+      "type": "string",
+      "description": "Initialisation vector used for the body, base64"
+    },
+    "file_uri": {
+      "type": "string",
+      "description": "Private storage uri of the encrypted attachment"
+    },
+    "file_iv": {
+      "type": "string",
+      "description": "Initialisation vector used for the attachment bytes, base64"
+    },
+    "file_name": {
+      "type": "string"
+    },
+    "file_type": {
+      "type": "string"
+    },
+    "file_size": {
+      "type": "number"
+    },
+    "read_by": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "burned_by": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Operators whose terminal has already self-destructed this block"
+    }
+  },
+  "required": [
+    "conversation_id",
+    "participants",
+    "sender_id",
+    "kind"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "data.participants": {
+            "$in": [
+              "{{user.id}}"
+            ]
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "create": {
+      "$and": [
+        {
+          "data.participants": {
+            "$in": [
+              "{{user.id}}"
+            ]
+          }
+        },
+        {
+          "created_by_id": "{{user.id}}"
+        }
+      ]
+    },
+    "update": {
+      "data.participants": {
+        "$in": [
+          "{{user.id}}"
+        ]
+      }
+    },
+    "delete": {
+      "data.participants": {
+        "$in": [
+          "{{user.id}}"
+        ]
+      }
+    }
+  }
+}

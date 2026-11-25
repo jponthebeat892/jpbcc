@@ -1,0 +1,85 @@
+{
+  "name": "Connection",
+  "type": "object",
+  "properties": {
+    "from_user_id": {
+      "type": "string",
+      "description": "Operator requesting the channel"
+    },
+    "from_username": {
+      "type": "string"
+    },
+    "to_user_id": {
+      "type": "string",
+      "description": "Operator who must approve or reject the request"
+    },
+    "to_username": {
+      "type": "string"
+    },
+    "intro": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "accepted",
+        "declined",
+        "cancelled"
+      ]
+    },
+    "conversation_id": {
+      "type": "string"
+    },
+    "responded_date": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "from_user_id",
+    "to_user_id",
+    "status"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "data.from_user_id": "{{user.id}}"
+        },
+        {
+          "data.to_user_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "create": {
+      "data.from_user_id": "{{user.id}}"
+    },
+    "update": {
+      "$or": [
+        {
+          "data.from_user_id": "{{user.id}}"
+        },
+        {
+          "data.to_user_id": "{{user.id}}"
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "data.from_user_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}
